@@ -6,5 +6,5 @@ interface Props {
 }
 
 export const Container = ({ children, className }: Props) => {
-  return <div className={clsx(className)}>{children}</div>;
+  return <div className={clsx(" max-w-7xl m-auto", className)}>{children}</div>;
 };

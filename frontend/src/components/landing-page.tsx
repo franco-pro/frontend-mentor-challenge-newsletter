@@ -1,30 +1,39 @@
 import Image from "next/image";
 import { Container } from "./container";
-import { Form } from "./form/form";
 import clsx from "clsx";
 import { Button } from "./button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   className?: string;
 }
 
 export const LandingPage = ({ className }: Props) => {
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    // email = e.target.email.value;
-    next();
-  };
-  const [Email, setEmail] = useState("");
+  // email = e.target.email.value;
+
+  const initialValues = { email: "" };
+  const [formValues, setFormValues] = useState(initialValues);
   const [formState, setFormState] = useState(0);
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  //function to advanced (to change state form 0 at 1)
   const next = () => {
     return setFormState(formState + 1);
   };
-
+  //function to back
   const previous = () => {
     return setFormState(formState - 1);
   };
-  console.log("setFormState : ", setFormState);
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    next();
+  };
+
   return (
     <>
       {formState === 0 && (
@@ -34,7 +43,7 @@ export const LandingPage = ({ className }: Props) => {
           <div className="md:flex md:flex-row-reverse md:bg-white md:w-5/6 xl:w-8/12 md:m-auto md:justify-between md:p-4 md:rounded-2xl items-center md:gap-10">
             <div className="md:2/4 xl:w-4/10">
               <Image
-                className="md:content-img_desktop"
+                className="md:content-img_desktop" //to change the size of the image when the size of screen > 768px
                 width={400}
                 height={400}
                 layout="responsive"
@@ -71,8 +80,8 @@ export const LandingPage = ({ className }: Props) => {
                     className="border border-grey rounded-xl p-4 w-full md:p-2 placeholder:text-sm md:placeholder:md:text-md"
                     type="email"
                     name="email"
-                    value={Email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formValues.email}
+                    onChange={handleChange}
                     id="email"
                     placeholder="email@company.com"
                   />
@@ -85,7 +94,7 @@ export const LandingPage = ({ className }: Props) => {
       )}
 
       {formState === 1 && (
-        <div className=" md:bg-dark_grey md:h-screen md:flex">
+        <Container className=" md:bg-dark_grey md:h-screen md:flex">
           <div className="flex flex-col justify-between px-10 py-20 gap-6 h-screen m-auto md:bg-white md:w-5/12 md:h-4/6 xl:h-3/6 xl:w-4/12 2xl:w-3/12 md:rounded-xl md:p-6 md:gap-2">
             <div className="space-y-6">
               <span>
@@ -117,15 +126,15 @@ export const LandingPage = ({ className }: Props) => {
               </h1>
               <p>
                 A confimation email has been sent to{" "}
-                <span className="font-bold">{Email}</span>. please open it and
-                check the button inside to confirm your inscription
+                <span className="font-bold">{formValues.email}</span>. please
+                open it and check the button inside to confirm your inscription
               </p>
             </div>
             <Button type="button" onClick={previous}>
               Dismiss message
             </Button>
           </div>
-        </div>
+        </Container>
       )}
     </>
   );
@@ -134,6 +143,8 @@ export const LandingPage = ({ className }: Props) => {
 interface productlistProps {
   children: React.ReactNode;
 }
+
+//this is a component to make the list of the product
 const Productlist = ({ children }: productlistProps) => {
   return (
     <div className="flex gap-4 items-start">
