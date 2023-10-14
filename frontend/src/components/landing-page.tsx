@@ -40,7 +40,7 @@ export const LandingPage = ({ className }: Props) => {
         <Container
           className={clsx(" md:bg-dark_grey md:h-screen md:flex", className)}
         >
-          <div className="md:flex md:flex-row-reverse md:bg-white md:w-5/6 xl:w-8/12 2xl:w-9/12 2xl:py-5 md:m-auto md:justify-between md:p-4 md:rounded-2xl items-center md:gap-10">
+          <div className="md:flex md:flex-row-reverse md:bg-white md:w-5/6 xl:w-8/12  2xl:py-5 md:m-auto md:justify-between md:p-4 md:rounded-2xl items-center md:gap-10">
             <div className="md:w-2/4 xl:w-4/10">
               <Image
                 className="md:content-img_desktop" //to change the size of the image when the size of screen > 768px
