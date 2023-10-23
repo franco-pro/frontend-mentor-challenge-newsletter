@@ -2,23 +2,28 @@ import Image from "next/image";
 import { Container } from "./container";
 import clsx from "clsx";
 import { Button } from "./button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useFormik } from "formik";
+import FormValidate from "@/lib/form-validate/form_validate";
+import { formikValues } from "@/type/formik-type";
 
 interface Props {
   className?: string;
 }
 
 export const LandingPage = ({ className }: Props) => {
-  // email = e.target.email.value;
-
-  const initialValues = { email: "" };
-  const [formValues, setFormValues] = useState(initialValues);
   const [formState, setFormState] = useState(0);
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+    },
+    validate: FormValidate,
+    onSubmit,
+  });
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+  async function onSubmit(values: formikValues) {
+    console.log(values);
+  }
 
   //function to advanced (to change state form 0 at 1)
   const next = () => {
@@ -27,11 +32,6 @@ export const LandingPage = ({ className }: Props) => {
   //function to back
   const previous = () => {
     return setFormState(formState - 1);
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    next();
   };
 
   return (
@@ -68,25 +68,45 @@ export const LandingPage = ({ className }: Props) => {
                 <Productlist>And much more!</Productlist>
               </div>
               <form
-                method="post"
-                onSubmit={handleSubmit}
+                // method="post"
+                onSubmit={formik.handleSubmit}
                 className="flex flex-col gap-6"
               >
                 <div className="email flex flex-col items-start gap-3 text-xs md:text-xl">
                   <label htmlFor="email" className="font-bold text-dark_grey">
                     Email Address
                   </label>
+
                   <input
-                    className="border border-grey rounded-xl p-4 w-full md:p-2 placeholder:text-sm md:placeholder:md:text-md"
+                    className={clsx(
+                      "border outline-none text-lg  rounded-xl p-4 w-full md:p-2 placeholder:text-sm md:placeholder:md:text-md",
+                      formik.touched.email && formik.errors.email
+                        ? "border-red-500"
+                        : "border-charcoal_grey"
+                    )}
                     type="email"
+                    {...formik.getFieldProps("email")}
                     name="email"
-                    value={formValues.email}
-                    onChange={handleChange}
                     id="email"
                     placeholder="email@company.com"
                   />
+                  {formik.touched.email && formik.errors.email ? (
+                    <div className="text-red-500 space-y-2 text-sm">
+                      {formik.errors.email}
+                    </div>
+                  ) : null}
                 </div>
-                <Button type="submit">Subscribe to monthly newsletter</Button>
+                <Button
+                  type="submit"
+                  onClick={next}
+                  disabled={true ? formik.errors.email : false}
+                  className={clsx(
+                    formik.errors.email &&
+                      "bg-gray-500 hover:bg-slate-500 cursor-not-allowed hover:shadow-none "
+                  )}
+                >
+                  Subscribe to monthly newsletter
+                </Button>
               </form>
             </div>
           </div>
@@ -126,7 +146,7 @@ export const LandingPage = ({ className }: Props) => {
               </h1>
               <p>
                 A confimation email has been sent to{" "}
-                <span className="font-bold">{formValues.email}</span>. please
+                <span className="font-bold">{formik.values.email}</span>. please
                 open it and check the button inside to confirm your inscription
               </p>
             </div>
